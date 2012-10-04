@@ -20,6 +20,9 @@ typedef enum
 
 @interface BSKeyboardControls : UIView
 
+- (void)next;
+- (void)done;
+
 /*
  * Delegate
  */
