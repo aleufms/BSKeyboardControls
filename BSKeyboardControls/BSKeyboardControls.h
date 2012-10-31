@@ -26,7 +26,7 @@ typedef enum
 /*
  * Delegate
  */
-@property (nonatomic, strong) id <BSKeyboardControlsDelegate> delegate;
+@property (nonatomic, weak) id <BSKeyboardControlsDelegate> delegate;
 
 /*
  * Text fields the controls should work on
@@ -73,6 +73,11 @@ typedef enum
  * Reload text fields
  */
 - (void)reloadTextFields;
+
+/*
+ * Allow hiding of previous / next buttons
+ */
+- (void)hidePrevNextButtons: (BOOL)isHidden;
 
 @end
 
