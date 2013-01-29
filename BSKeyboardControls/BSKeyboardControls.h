@@ -34,12 +34,9 @@ typedef enum
 - (void)next;
 - (void)done;
 
-/*
- * Delegate
-=======
+
 /**
  *  Delegate to send callbacks to.
->>>>>>> upstream/master
  */
 @property (nonatomic, weak) id <BSKeyboardControlsDelegate> delegate;
 
