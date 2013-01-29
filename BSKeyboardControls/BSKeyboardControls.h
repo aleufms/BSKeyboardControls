@@ -1,22 +1,33 @@
 //
 //  BSKeyboardControls.h
-//  BSKeyboardControls
+//  Example
 //
-//  Created by Simon Støvring on 09/01/12.
-//  Copyright (c) 2012 Simon B. Støvring. All rights reserved.
+//  Created by Simon B. Støvring on 11/01/13.
+//  Copyright (c) 2013 simonbs. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@protocol BSKeyboardControlsDelegate;
-
-/* Directions */
+/**
+ *  Available controls.
+ */
 typedef enum
 {
-    KeyboardControlsDirectionPrevious,
-    KeyboardControlsDirectionNext,
-    KeyboardControlsDirectionSelected
-} KeyboardControlsDirection;
+    BSKeyboardControlPreviousNext = 1 << 0,
+    BSKeyboardControlDone = 1 << 1
+} BSKeyboardControl;
+
+/**
+ *  Directions in which the fields can be selected.
+ *  These are relative to the active field.
+ */
+typedef enum
+{
+    BSKeyboardControlsDirectionPrevious = 0,
+    BSKeyboardControlsDirectionNext
+} BSKeyboardControlsDirection;
+
+@protocol BSKeyboardControlsDelegate;
 
 @interface BSKeyboardControls : UIView
 
@@ -25,72 +36,92 @@ typedef enum
 
 /*
  * Delegate
+=======
+/**
+ *  Delegate to send callbacks to.
+>>>>>>> upstream/master
  */
 @property (nonatomic, weak) id <BSKeyboardControlsDelegate> delegate;
 
-/*
- * Text fields the controls should work on
- * The order of this, will be the order used when the next and the previous button is pressed
+/**
+ *  Visible controls. Use a bitmask to show multiple controls.
  */
-@property (nonatomic, strong) NSArray *textFields;
+@property (nonatomic, assign) BSKeyboardControl visibleControls;
 
-/*
- * Currently active text field
+/**
+ *  Fields which the controls should handle.
+ *  The order of the fields is important as this determines which text field
+ *  is the previous and which is the next.
+ *  All fields will automatically have the input accessory view set to
+ *  the instance of the controls.
  */
-@property (nonatomic, strong) id activeTextField;
+@property (nonatomic, strong) NSArray *fields;
 
-/*
- * Style of the bar
+/**
+ *  The active text field.
+ *  This should be set when the user begins editing a text field or a text view
+ *  and it is automatically set when selecting the previous or the next field.
+ */
+@property (nonatomic, strong) UIView *activeField;
+
+/**
+ *  Style of the toolbar.
  */
 @property (nonatomic, assign) UIBarStyle barStyle;
 
-/*
- * Tint color of the previous and next buttons
+/**
+ *  Tint color of the toolbar.
  */
-@property (nonatomic, strong) UIColor *previousNextTintColor;
+@property (nonatomic, strong) UIColor *barTintColor;
 
-/*
- * Title of the previous button
+/**
+ *  Tint color of the segmented control.
+ */
+@property (nonatomic, strong) UIColor *segmentedControlTintControl;
+
+/**
+ *  Title of the previous button. If this is not set, a default localized title will be used.
  */
 @property (nonatomic, strong) NSString *previousTitle;
 
-/*
- * Title of the next button
+/**
+ *  Title of the next button. If this is not set, a default localized title will be used.
  */
 @property (nonatomic, strong) NSString *nextTitle;
 
-/*
- * Title of the done button
+/**
+ *  Title of the done button. If this is not set, a default localized title will be used.
  */
 @property (nonatomic, strong) NSString *doneTitle;
 
-/*
- *  Tint color of the done button
+/**
+ *  Tint color of the done button.
  */
 @property (nonatomic, strong) UIColor *doneTintColor;
 
-/*
- * Reload text fields
+/**
+ *  Initialize keyboard controls.
+ *  @param fields Fields which the controls should handle.
+ *  @return Initialized keyboard controls.
  */
-- (void)reloadTextFields;
-
-/*
- * Allow hiding of previous / next buttons
- */
-- (void)hidePrevNextButtons: (BOOL)isHidden;
+- (id)initWithFields:(NSArray *)fields;
 
 @end
 
-/* Delegation methods */
 @protocol BSKeyboardControlsDelegate <NSObject>
 @optional
-/*
- * Previous or next button was pressed
+/**
+ *  Called when a field was selected by going to the previous or the next field.
+ *  The implementation of this method should scroll to the view.
+ *  @param keyboardControls The instance of keyboard controls.
+ *  @param field The selected field.
+ *  @param direction Direction in which the field was selected.
  */
-- (void)keyboardControlsPreviousNextPressed:(BSKeyboardControls *)controls withDirection:(KeyboardControlsDirection)direction andActiveTextField:(UITextField *)textField;
+- (void)keyboardControls:(BSKeyboardControls *)keyboardControls selectedField:(UIView *)field inDirection:(BSKeyboardControlsDirection)direction;
 
-/*
- * Done button was pressed
+/**
+ *  Called when the done button was pressed.
+ *  @param keyboardControls The instance of keyboard controls.
  */
-- (void)keyboardControlsDonePressed:(BSKeyboardControls *)controls;
+- (void)keyboardControlsDonePressed:(BSKeyboardControls *)keyboardControls;
 @end
