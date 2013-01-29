@@ -31,9 +31,8 @@ typedef enum
 
 @interface BSKeyboardControls : UIView
 
-- (void)next;
-- (void)done;
-
+- (void)selectPreviousField;
+- (void)selectNextField;
 
 /**
  *  Delegate to send callbacks to.
